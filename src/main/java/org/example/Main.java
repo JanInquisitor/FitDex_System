@@ -5,6 +5,9 @@ import org.example.data.DataSource;
 import org.example.product.ProductController;
 import org.example.user.UserController;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+
 import static io.javalin.apibuilder.ApiBuilder.*;
 
 public class Main {
@@ -20,7 +23,7 @@ public class Main {
         var app = Javalin.create(config -> {
                     config.jsonMapper(appConfig.mapper);
                 })
-                .get("/", ctx -> ctx.result(dataSource.toString()))
+                .get("/", ctx -> ctx.result(dataSource.toString()) )
                 .start(7070);
 
 
@@ -53,8 +56,18 @@ public class Main {
 
             // Testing routes
             path("testing", () -> {
-                Response response = new Response("This is a JSON Object", 12);
-                get(ctx -> ctx.json(response));
+//                Response response = new Response("This is a JSON Object", 12);
+                String response;
+                try {
+                    response = dataSource.httpCallTest();
+                } catch (URISyntaxException e) {
+                    throw new RuntimeException(e);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                get(ctx -> ctx.result(response));
             });
         });
 

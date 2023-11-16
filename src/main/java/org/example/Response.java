@@ -1,6 +1,6 @@
 package org.example;
 
-public class Response {
+public class  Response {
 
     String message;
 

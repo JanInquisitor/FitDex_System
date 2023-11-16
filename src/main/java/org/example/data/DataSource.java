@@ -2,23 +2,29 @@ package org.example.data;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import io.javalin.http.Context;
 import org.example.product.Product;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.net.*;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.*;
+
+import static java.net.http.HttpRequest.*;
 
 // This class is used for testing purposses
 public class DataSource {
+
+    Gson gson = new GsonBuilder().create();
+
+    List<Product> productList;
+
     public static class ParameterStringBuilder {
-        public static String getParamsString(Map<String, String> params)
-                throws UnsupportedEncodingException {
+        public static String getParamsString(Map<String, String> params) throws UnsupportedEncodingException {
             StringBuilder result = new StringBuilder();
 
             for (Map.Entry<String, String> entry : params.entrySet()) {
@@ -35,10 +41,6 @@ public class DataSource {
         }
     }
 
-    Gson gson = new GsonBuilder().create();
-
-    List<Product> productList;
-
     public DataSource(List<Product> productList) {
         this.productList = productList;
     }
@@ -47,7 +49,8 @@ public class DataSource {
         fillFoodList();
     }
 
-    public void httpCall() throws IOException {
+    // This uses the old HttpURLConnection library.
+    public void httpCallOld() throws IOException {
         URL url = new URL("http://example.com");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
 
@@ -66,6 +69,23 @@ public class DataSource {
         out.writeBytes(ParameterStringBuilder.getParamsString(parameters));
         out.flush();
         out.close();
+    }
+
+    public String httpCallTest() throws URISyntaxException, IOException, InterruptedException {
+//        HttpRequest.Builder client = HttpRequest.newBuilder();
+
+        Builder requestBuilder = newBuilder(new URI("https://postman-echo.com/get"));
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(new URI("https://postman-echo.com/get"))
+                .GET()
+                .build();
+
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        return response.body();
     }
 
     private void fillFoodList() {
