@@ -4,6 +4,8 @@ import io.javalin.http.Context;
 import org.example.data.DataSource;
 
 public class ProductController {
+
+
     public static void getAllProducts(Context context) {
 
         // for now, make a http/s request to another API for testing purposes.
@@ -21,5 +23,9 @@ public class ProductController {
     }
 
     public static void deleteProducts(Context context) {
+    }
+
+    public static void searchProduct (Context context) {
+
     }
 }

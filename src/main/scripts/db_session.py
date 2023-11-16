@@ -1,0 +1,59 @@
+import sqlalchemy as sa
+import sqlalchemy.orm as orm
+from sqlalchemy.orm import Session
+
+import datetime
+import sqlalchemy as sa
+import sqlalchemy.ext.declarative as dec
+
+
+SqlAlchemyBase = dec.declarative_base()
+
+
+class Package(SqlAlchemyBase):
+    __tablename__ = "packages"
+
+    id = sa.Column(sa.String, primary_key=True)
+    created_date = sa.Column(sa.DateTime, default=datetime.datetime.now, index=True)
+    summary = sa.Column(sa.String, nullable=False)
+    description = sa.Column(sa.String, nullable=True)
+
+    home_page = sa.Column(sa.String)
+    docs_url = sa.Column(sa.String)
+    package_url = sa.Column(sa.String)
+
+    author_name = sa.Column(sa.String)
+    author_email = sa.Column(sa.String, index=True)
+
+    # Relationships reference
+    # releases = orm.relation("Release", order_by=[Release.created_date.desc()], back_populates='package')
+
+    def __repr__(self):
+        return "<Package {}>".format(self.id)
+
+__factory = None
+
+
+def global_init(username, password, hostname, port, database_name):
+    global __factory
+
+    if __factory:
+        return
+
+    if not username or not password or not hostname or not port or not database_name:
+        raise Exception("You must specify PostgreSQL connection details.")
+
+    # connection_string = f"postgresql://{username}:{password}@{hostname}:{port}/{database_name}"
+    connection_string = f"postgresql://{hostname}:{port}/{database_name}"
+    print("Connecting to DB with {}".format(connection_string))
+
+    engine = sa.create_engine(connection_string, echo=True)
+    __factory = orm.sessionmaker(bind=engine)
+
+    # This imports the model classes so that the create_all() function has access to them to create the database tables
+    SqlAlchemyBase.metadata.create_all(engine)
+
+
+def create_session() -> Session:
+    global __factory
+    return __factory()

@@ -2,7 +2,6 @@ package org.example.data;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import io.javalin.http.Context;
 import org.example.product.Product;
 
 import java.io.DataOutputStream;
