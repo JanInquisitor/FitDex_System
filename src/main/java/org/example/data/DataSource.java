@@ -1,12 +1,41 @@
 package org.example.data;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.example.product.Product;
 
-import java.util.Random;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.util.*;
 
+// This class is used for testing purposses
 public class DataSource {
+    public static class ParameterStringBuilder {
+        public static String getParamsString(Map<String, String> params)
+                throws UnsupportedEncodingException {
+            StringBuilder result = new StringBuilder();
+
+            for (Map.Entry<String, String> entry : params.entrySet()) {
+                result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+                result.append("=");
+                result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+                result.append("&");
+            }
+
+            String resultString = result.toString();
+            return resultString.length() > 0
+                    ? resultString.substring(0, resultString.length() - 1)
+                    : resultString;
+        }
+    }
+
+    Gson gson = new GsonBuilder().create();
 
     List<Product> productList;
 
@@ -15,6 +44,31 @@ public class DataSource {
     }
 
     public DataSource() {
+        fillFoodList();
+    }
+
+    public void httpCall() throws IOException {
+        URL url = new URL("http://example.com");
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+        con.setRequestMethod("GET");
+        con.setRequestProperty("Content-Type", "application/json");
+        con.setConnectTimeout(5000);
+        con.setReadTimeout(5000);
+
+//        String contentType = con.getHeaderField("Content-Type");
+
+        Map<String, String> parameters = new HashMap<>();
+        parameters.put("param1", "val");
+
+        con.setDoOutput(true);
+        DataOutputStream out = new DataOutputStream(con.getOutputStream());
+        out.writeBytes(ParameterStringBuilder.getParamsString(parameters));
+        out.flush();
+        out.close();
+    }
+
+    private void fillFoodList() {
         this.productList = new ArrayList<>(); // Initialize the productList
 
         Random random = new Random();
@@ -34,6 +88,7 @@ public class DataSource {
             productList.add(product);
         }
     }
+
 
     @Override
     public String toString() {

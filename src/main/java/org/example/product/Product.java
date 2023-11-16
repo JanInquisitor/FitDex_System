@@ -33,8 +33,6 @@ public class Product {
     //    @Column(name = "price")
     private Double price;
 
-    // Constructors, getters, setters, and other methods
-
     // Constructors
     public Product() {
         // Default constructor required by Hibernate
