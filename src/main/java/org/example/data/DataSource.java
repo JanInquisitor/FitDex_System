@@ -48,7 +48,7 @@ public class DataSource {
         fillFoodList();
     }
 
-    // This uses the old HttpURLConnection library.
+    // This method uses the old HttpURLConnection library.
     public void httpCallOld() throws IOException {
         URL url = new URL("http://example.com");
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
