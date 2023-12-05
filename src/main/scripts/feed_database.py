@@ -19,6 +19,13 @@ def setup_db():
     db_session.global_init(db_user, db_password, db_host, db_port, db_name)
 
 
+def stop_if_hyphen_in_keys(row):
+    for key in row.keys():
+        if re.search(r'-', key):
+            print(f"Error: Key '{key}' contains a hyphen. Stopping the program.")
+            exit()
+
+
 def insert_whole_data_from_csv(csv_file_path):
     # Create a session to interact with the database
     session = db_session.create_session()
@@ -36,6 +43,7 @@ def insert_whole_data_from_csv(csv_file_path):
 
             # Create an instance of your SQLAlchemy model and assign values
             row = {key: value for key, value in row.items() if not re.search(r'-', key)}
+            stop_if_hyphen_in_keys(row)
 
             try:
                 # Create an instance of your SQLAlchemy model and assign values
@@ -56,29 +64,39 @@ def insert_whole_data_from_csv(csv_file_path):
 
 def process_chunk(chunk):
     with db_session.create_session() as session:
-        for row in chunk:
-            # Convert date strings to datetime objects if needed
-            if 'created_datetime' in row:
-                row['created_datetime'] = datetime.datetime.strptime(row['created_datetime'], '%Y-%m-%dT%H:%M:%SZ')
 
-            # Create an instance of your SQLAlchemy model and assign values
-            row = {key: value for key, value in row.items() if not re.search(r'-', key)}
+        try:
+            for row in chunk:
+                # Convert date strings to datetime objects if needed
+                # if 'created_datetime' in row:
+                #     row['created_datetime'] = datetime.datetime.strptime(row['created_datetime'], '%Y-%m-%dT%H:%M:%SZ')
 
-            try:
-                # Create an instance of your SQLAlchemy model and assign values
-                product = db_session.Product(**row)
+                row = {key.replace('-', '_'): value for key, value in row.items()}
 
-                # Add the instance to the session
-                session.add(product)
+                try:
+                    # Create an instance of your SQLAlchemy model and assign values
+                    product = db_session.Product(**row)
 
-                # Log successful insertion
-                logging.info(f"Successfully inserted product with id {row['code']}")
-            except Exception as e:
-                # Log any exceptions that occur during insertion with full traceback
-                logging.error(f"Error inserting product with id {row['code']}: {repr(e)}", exc_info=True)
+                    # Add the instance to the session
+                    session.add(product)
 
-        # Commit the changes to the database after processing each batch
-        session.commit()
+                    # Log successful insertion
+                    logging.info(f"Successfully inserted product with id {row['code']}")
+                except Exception as e:
+                    # Log any exceptions that occur during insertion with full traceback
+                    logging.error(f"Error inserting product with id {row['code']}: {repr(e)}", exc_info=True)
+                    logging.error(f"Problematic row values: {row}")
+            # Commit the changes to the database after processing each batch
+            session.commit()
+            logging.info("Chunk inserted into the database.")
+        except Exception as e:
+            # Log any exceptions that occur during insertion
+            logging.error(f"Error inserting chunk: {e.with_traceback()}")
+            # Rollback changes in case of an exception
+            session.rollback()
+        finally:
+            # Close the session
+            session.close()
 
 
 def insert_data_from_csv_threaded(csv_file_path):
@@ -92,17 +110,17 @@ def insert_data_from_csv_threaded(csv_file_path):
             # Specify the batch size for each thread
             BATCH_SIZE = 100
 
-            count = 0
+            # Read the CSV file into chunks
+            chunks = iter(lambda: list(islice(csv_reader, BATCH_SIZE)), [])
 
             # Process each batch in parallel
-            for chunk in iter(lambda: list(islice(csv_reader, BATCH_SIZE)), []):
-
+            for chunk in chunks:
                 executor.submit(process_chunk, chunk)
 
 
 if __name__ == "__main__":
     # Configure logging
-    logging.basicConfig(filename='insert_log.txt', level=logging.INFO,
+    logging.basicConfig(level=logging.DEBUG,
                         format='%(asctime)s - %(levelname)s - %(message)s')
     console = logging.StreamHandler()
     console.setLevel(logging.INFO)

@@ -1,31 +1,36 @@
 package org.example.product;
 
+import io.javalin.apibuilder.CrudHandler;
 import io.javalin.http.Context;
+import jakarta.servlet.http.HttpServletRequest;
 import org.example.data.DataSource;
+import org.jetbrains.annotations.NotNull;
 
-public class ProductController {
+public class ProductController implements CrudHandler {
+    @Override
+    public void create(@NotNull Context context) {
+    }
 
+    @Override
+    public void delete(@NotNull Context context, @NotNull String s) {
 
-    public static void getAllProducts(Context context) {
+    }
 
-        // for now, make a http/s request to another API for testing purposes.
+    @Override
+    public void getAll(@NotNull Context context) {
         DataSource dataSource = new DataSource();
+        HttpServletRequest req = context.req();
+        String body = context.body();
+        context.result(body);
+    }
+
+    @Override
+    public void getOne(@NotNull Context context, @NotNull String s) {
 
     }
 
-    public static void createProducts(Context context) {
-    }
-
-    public static void getProducts(Context context) {
-    }
-
-    public static void updateProducts(Context context) {
-    }
-
-    public static void deleteProducts(Context context) {
-    }
-
-    public static void searchProduct (Context context) {
+    @Override
+    public void update(@NotNull Context context, @NotNull String s) {
 
     }
 }

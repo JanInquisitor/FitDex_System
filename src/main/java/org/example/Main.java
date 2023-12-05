@@ -23,14 +23,18 @@ public class Main {
         var app = Javalin.create(config -> {
                     config.jsonMapper(appConfig.mapper);
                 })
-                .get("/", ctx -> ctx.result(dataSource.toString()) )
+                .get("/", ctx -> ctx.result(dataSource.toString()))
                 .start(7070);
 
 
         // Routers
         app.routes(() -> {
+            // This is the "Products" routes that will use the CRUD interface, as a reference, for now at least until I
+            // get more comfortable with javalin.
+            crud("products/{product-id}", new ProductController());
 
             //User routes
+            // The "Users" routes use UserController class without employing the CRUD interface, as a reference.
             path("users", () -> {
                 get(UserController::getAllUsers);
                 post(UserController::createUser);
@@ -38,18 +42,6 @@ public class Main {
                     get(UserController::getUser);
                     patch(UserController::updateUser);
                     delete(UserController::deleteUser);
-                });
-                ws("events", UserController::webSocketEvents);
-            });
-
-
-            path("products", () -> {
-                get(ProductController::getAllProducts);
-                post(ProductController::createProducts);
-                path("{id}", () -> {
-                    get(ProductController::getProducts);
-                    patch(ProductController::updateProducts);
-                    delete(ProductController::deleteProducts);
                 });
                 ws("events", UserController::webSocketEvents);
             });
@@ -69,6 +61,14 @@ public class Main {
                 }
                 get(ctx -> ctx.result(response));
             });
+
+
+//            path("/hello/{name}", () -> { // This doesn't work for some reason @TODO: Check why.
+//                get(ctx -> {
+//                    Response local_response = new Response("Hello " + ctx.pathParam("name"), 735);
+//                    ctx.json(local_response);
+//                });
+//            });
         });
 
 
