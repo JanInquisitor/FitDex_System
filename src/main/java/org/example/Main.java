@@ -15,7 +15,6 @@ public class Main {
         // Testing variables
         DataSource dataSource = new DataSource();
 
-
         // App init
         var app = Javalin.create(config -> {
                     config.jsonMapper(appConfig.mapper);
@@ -23,9 +22,9 @@ public class Main {
                 .get("/", ctx -> ctx.result(dataSource.toString()))
                 .start(7070);
 
-
         // Routers
         app.routes(() -> {
+
             // This is the "Products" routes that will use the CRUD interface, as a reference, for now at least until I
             // get more comfortable with javalin.
             crud("products/{product-id}", new ProductController());
