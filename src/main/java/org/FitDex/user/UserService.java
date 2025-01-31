@@ -1,4 +1,4 @@
-package org.example.user;
+package org.FitDex.user;
 
 public class UserService {
 }

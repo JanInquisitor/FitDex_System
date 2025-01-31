@@ -1,4 +1,4 @@
-package org.example;
+package org.FitDex.WebAPI;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

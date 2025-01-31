@@ -1,12 +1,12 @@
-package org.example.product;
+package org.FitDex.Food;
 
 import io.javalin.apibuilder.CrudHandler;
 import io.javalin.http.Context;
 import jakarta.servlet.http.HttpServletRequest;
-import org.example.data.DataSource;
+import org.FitDex.Persistence.FoodDataAccess;
 import org.jetbrains.annotations.NotNull;
 
-public class ProductController implements CrudHandler {
+public class FoodController implements CrudHandler {
     @Override
     public void create(@NotNull Context context) {
     }
@@ -18,7 +18,7 @@ public class ProductController implements CrudHandler {
 
     @Override
     public void getAll(@NotNull Context context) {
-        DataSource dataSource = new DataSource();
+        FoodDataAccess dataSource = new FoodDataAccess();
         HttpServletRequest req = context.req();
         String body = context.body();
         context.result(body);
