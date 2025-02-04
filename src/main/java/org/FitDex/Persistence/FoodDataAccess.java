@@ -1,8 +1,8 @@
 package org.FitDex.Persistence;
 
 import org.FitDex.Food.Food;
-import org.FitDex.Nutrients.NutritionBuilder;
-import org.FitDex.Nutrients.NutritionalValues;
+import org.FitDex.Nutrients.NutritionProfileBuilder;
+import org.FitDex.Nutrients.NutritionProfile;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
@@ -18,7 +18,7 @@ public class FoodDataAccess {
 
     Connection[] connectionPool;
 
-    NutritionBuilder nutritionBuilder = new NutritionBuilder();
+    NutritionProfileBuilder nutritionProfileBuilder = new NutritionProfileBuilder();
 
     public FoodDataAccess() {
     }
@@ -35,7 +35,7 @@ public class FoodDataAccess {
                 double fatMonoContent = resultSet.getDouble("monounsaturated-fat_100g");
                 double fatPolyContent = resultSet.getDouble("polyunsaturated-fat_100g");
 
-                NutritionalValues nutritionalValues = nutritionBuilder.setMonounsaturatedFat100g(fatMonoContent)
+                NutritionProfile nutritionProfile = nutritionProfileBuilder.setMonounsaturatedFat100g(fatMonoContent)
                         .setPolyunsaturatedFat100g(fatPolyContent).setAcidity100g(resultSet.getDouble("acidity_100g")).build();
 
 //                System.out.println("code: " + code + ", name: " + food.getName() + ", mono fat content: " + food.getMonounsaturated_fat_100g() + ", acidity: " + food.getAcidity_100g() + ", poly fat content: " + fatPolyContent);
@@ -43,12 +43,21 @@ public class FoodDataAccess {
         }
     }
 
+    // This will get both ingredients and foods, I'll make a dinstinction in the database eventually or have it a single
+    // unit, or a field in the table that determines which is which
     public Food getProductsById(int id) throws SQLException {
         try (Connection connection = DriverManager.getConnection(this.connectionString);
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM products WHERE code = ?")) {
-
             statement.setInt(1, id);
+            return extractHelper(statement);
+        }
+    }
 
+
+    public Food getProductByName(String name) throws SQLException {
+        try (Connection connection = DriverManager.getConnection(this.connectionString);
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM products WHERE name = ?")) {
+            statement.setString(1, name);
             return extractHelper(statement);
         }
     }
@@ -74,6 +83,7 @@ public class FoodDataAccess {
             double fatMonoContent = resultSet.getDouble("monounsaturated-fat_100g");
             double fatPolyContent = resultSet.getDouble("polyunsaturated-fat_100g");
             double saturatedFatContent = resultSet.getDouble("saturated-fat_100g");
+            double omega6FatsContent = resultSet.getDouble("omega-3-fat_100g");
 
             // Handle null values safely
             if (resultSet.wasNull()) {
@@ -83,7 +93,7 @@ public class FoodDataAccess {
             }
 
             // Assuming NutritionBuilder is correctly set up
-            NutritionalValues nutritionalValues = new NutritionBuilder()
+            NutritionProfile nutritionProfile = new NutritionProfileBuilder()
                     .setAcidity100g(acidityContent)
                     .setSalt100g(saltContent)
                     .setAlcohol100g(alcoholContent)
@@ -98,7 +108,7 @@ public class FoodDataAccess {
                     .setSaturatedfat100g(saturatedFatContent).build();
 
 
-            return new Food(productName, nutritionalValues);
+            return new Food(productName, nutritionProfile);
         }
     }
 

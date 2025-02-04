@@ -1,11 +1,13 @@
 package org.FitDex.Interfaces;
 
-import org.FitDex.Nutrients.NutritionalValues;
+import org.FitDex.Nutrients.Minerals;
+import org.FitDex.Nutrients.NutritionProfile;
+import org.FitDex.Nutrients.Proteins;
 
 // I guess that in the case of the ProductBuilder pattern and the food products you can imagine the building process of the
 // meals like a cooking. When creating the object that represents them you are visualizing the cooking of the food product
 // or the fabrication process.
-public interface Nutrition {
+public interface Nutrition extends Fat, Mineral, Protein, Vitamin {
 
     void reset();
 
@@ -25,7 +27,6 @@ public interface Nutrition {
 
     Nutrition setBehenicAcid100g(double behenicAcid100g);
 
-
     Nutrition setBetaCarotene100g(double betaCarotene100g);
 
     Nutrition setBetaGlucan100g(double betaGlucan100g);
@@ -37,7 +38,6 @@ public interface Nutrition {
     Nutrition setButyricAcid100g(double butyricAcid100g);
 
     Nutrition setCaffeine100g(double caffeine100g);
-
 
     Nutrition setCalcium100g(double calcium100g);
 
@@ -247,5 +247,5 @@ public interface Nutrition {
 
     Nutrition setFat(double fat);
 
-    NutritionalValues build();
+    NutritionProfile build();
 }

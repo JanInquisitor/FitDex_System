@@ -1,13 +1,13 @@
 package org.FitDex;
 
-import org.FitDex.Nutrients.NutritionalValues;
+import org.FitDex.Nutrients.NutritionProfile;
 
 // This might be an abstract class
 public class Ingredient {
-    
+
     private String name;
 
-    private NutritionalValues nutritionalValues;
+    private NutritionProfile nutritionProfile;
 
 
 }

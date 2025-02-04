@@ -2,16 +2,37 @@ package org.FitDex.Nutrients;
 
 import org.FitDex.Interfaces.Nutrition;
 
-public class NutritionBuilder implements Nutrition {
-    private NutritionalValues values;
+// Ok so I'll hold the information in a DS and then add then to a constructor in the end.
+public class NutritionProfileBuilder implements Nutrition {
+    NutritionProfile values;
 
-    public NutritionBuilder() {
+    BioactiveCompounds compoundsValues;
+
+    Carbohydrates carbohydratesValues;
+
+    Fats fatValues;
+
+    Minerals mineralValues;
+
+    Proteins proteinValues;
+
+    Vitamins vitaminValues;
+
+
+    public NutritionProfileBuilder() {
         this.reset();
     }
 
+    //TODO: Make a better implementation lol
     @Override
     public void reset() {
-        this.values = new NutritionalValues();
+        this.compoundsValues = new BioactiveCompounds();
+        this.carbohydratesValues = new Carbohydrates();
+        this.fatValues = new Fats();
+        this.proteinValues = new Proteins();
+        this.mineralValues = new Minerals();
+        this.vitaminValues = new Vitamins();
+        this.values = new NutritionProfile(compoundsValues, carbohydratesValues, fatValues, mineralValues, proteinValues, vitaminValues);
     }
 
     @Override
@@ -28,18 +49,19 @@ public class NutritionBuilder implements Nutrition {
 
     @Override
     public Nutrition setSugars100g(double sugars100g) {
+        this.carbohydratesValues.sugars100g = sugars100g;
         return this;
     }
 
     @Override
     public Nutrition setAlcohol100g(double alcohol100g) {
-        values.alcohol100g = alcohol100g;
+        this.compoundsValues.alcohol100g = alcohol100g;
         return this;
     }
 
     @Override
     public Nutrition setAlphaLinolenicAcid100g(double alphaLinolenicAcid100g) {
-        values.alphaLinolenicAcid100g = alphaLinolenicAcid100g;
+        this.fatValues.alphaLinolenicAcid100g = alphaLinolenicAcid100g;
         return this;
     }
 
@@ -60,13 +82,13 @@ public class NutritionBuilder implements Nutrition {
 
     @Override
     public Nutrition setBetaCarotene100g(double betaCarotene100g) {
-        values.betaCarotene100g = betaCarotene100g;
+        this.compoundsValues.betaCarotene100g = betaCarotene100g;
         return this;
     }
 
     @Override
     public Nutrition setBetaGlucan100g(double betaGlucan100g) {
-        values.betaGlucan100g = betaGlucan100g;
+        this.carbohydratesValues.betaGlucan100g = betaGlucan100g;
         return this;
     }
 
@@ -88,7 +110,7 @@ public class NutritionBuilder implements Nutrition {
 
     @Override
     public Nutrition setCaffeine100g(double caffeine100g) {
-        values.caffeine100g = caffeine100g;
+        this.compoundsValues.caffeine100g = caffeine100g;
         return this;
     }
 
@@ -114,7 +136,7 @@ public class NutritionBuilder implements Nutrition {
 
     @Override
     public Nutrition setCarbohydrates100g(double carbohydrates100g) {
-        values.carbohydrates100g = carbohydrates100g;
+        this.carbohydratesValues.carbohydrates100g = carbohydrates100g;
         return this;
     }
 
@@ -365,7 +387,7 @@ public class NutritionBuilder implements Nutrition {
 
     @Override
     public Nutrition setMonounsaturatedFat100g(double monounsaturatedFat100g) {
-        values.monounsaturatedFat100g = monounsaturatedFat100g;
+        this.fatValues.monounsaturatedFat100g = monounsaturatedFat100g;
         return this;
     }
 
@@ -456,7 +478,7 @@ public class NutritionBuilder implements Nutrition {
 
     @Override
     public Nutrition setPolyunsaturatedFat100g(double polyunsaturatedFat100g) {
-        values.polyunsaturatedFat100g = polyunsaturatedFat100g;
+        this.fatValues.polyunsaturatedFat100g = polyunsaturatedFat100g;
         return this;
     }
 
@@ -472,7 +494,7 @@ public class NutritionBuilder implements Nutrition {
 
     @Override
     public Nutrition setSaturatedfat100g(double saturatedfat100g) {
-        values.saturatedfat100g = saturatedfat100g;
+        this.fatValues.saturatedFat100g = saturatedfat100g;
         return this;
     }
 
@@ -618,8 +640,8 @@ public class NutritionBuilder implements Nutrition {
 
 
     @Override
-    public NutritionalValues build() {
-        NutritionalValues values = this.values;
+    public NutritionProfile build() {
+        NutritionProfile values = this.values;
         this.reset();
         return values;
     }

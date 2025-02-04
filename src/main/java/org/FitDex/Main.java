@@ -21,12 +21,10 @@ public class Main {
         // Right now the structure is messy but right now I'm just working on functionality, when I finish prototyping
         // the main functionalities then I'll refactor the code, I'm thinking of making the Food/Product object smaller using composition.
         FoodDataAccess dataSource = new FoodDataAccess();
-
         try {
 //            dataSource.getAllProducts();
             Food food = dataSource.getProductsById(111048403);
-
-            System.out.println(food.getName());
+            FoodAnalyzer.analyseFat(food);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
