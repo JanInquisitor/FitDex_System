@@ -1,8 +1,6 @@
 package org.FitDex.Interfaces;
 
-import org.FitDex.Nutrients.Minerals;
 import org.FitDex.Nutrients.NutritionProfile;
-import org.FitDex.Nutrients.Proteins;
 
 // I guess that in the case of the ProductBuilder pattern and the food products you can imagine the building process of the
 // meals like a cooking. When creating the object that represents them you are visualizing the cooking of the food product
@@ -21,12 +19,6 @@ public interface Nutrition extends Fat, Mineral, Protein, Vitamin {
 
     Nutrition setAlphaLinolenicAcid100g(double alphaLinolenicAcid100g);
 
-    Nutrition setArachidicAcid100g(double arachidicAcid100g);
-
-    Nutrition setArachidonicAcid100g(double arachidonicAcid100g);
-
-    Nutrition setBehenicAcid100g(double behenicAcid100g);
-
     Nutrition setBetaCarotene100g(double betaCarotene100g);
 
     Nutrition setBetaGlucan100g(double betaGlucan100g);
@@ -38,8 +30,6 @@ public interface Nutrition extends Fat, Mineral, Protein, Vitamin {
     Nutrition setButyricAcid100g(double butyricAcid100g);
 
     Nutrition setCaffeine100g(double caffeine100g);
-
-    Nutrition setCalcium100g(double calcium100g);
 
     Nutrition setCapricAcid100g(double capricAcid100g);
 
@@ -211,10 +201,6 @@ public interface Nutrition extends Fat, Mineral, Protein, Vitamin {
 
     Nutrition setTaurine100g(double taurine100g);
 
-    Nutrition setTransFat100g(double transFat100g);
-
-    Nutrition setUnsaturatedFat100g(double unsaturatedFat100g);
-
     Nutrition setVitaminA_100g(double vitaminA_100g);
 
     Nutrition setVitaminB12_100g(double vitaminB12_100g);
@@ -244,8 +230,6 @@ public interface Nutrition extends Fat, Mineral, Protein, Vitamin {
     Nutrition setZinc100g(double zinc100g);
 
     Nutrition setCalories(double calories);
-
-    Nutrition setFat(double fat);
 
     NutritionProfile build();
 }
