@@ -2,6 +2,10 @@ package org.FitDex.Nutrients;
 
 public class Fats {
 
+    public double arachidonicAcid100g;
+
+    public double alphaLinolenicAcid100g; //omega3
+
     public double butyricAcid100g;
 
     public double capricAcid100g;
@@ -26,8 +30,6 @@ public class Fats {
 
     public double nervonicAcid100g;
 
-    public double alphaLinolenicAcid100g; //omega3
-
     public double linoleicAcid100g;
 
     public double lignocericAcid100g;
@@ -37,8 +39,6 @@ public class Fats {
     public double gammaLinolenicAcid100g;
 
     public double arachidicAcid100g;
-
-    public double arachidonicAcid100g;
 
     public double eicosapentaenoicAcid100g;
 
@@ -62,13 +62,40 @@ public class Fats {
 
     public double omega9Fat100g;
 
-    private double fat100g;
 
     public Fats() {
     }
 
     public double getTotalFat() {
-        return saturatedFat100g + monounsaturatedFat100g + polyunsaturatedFat100g + transFat100g;
+        return butyricAcid100g +
+                capricAcid100g +
+                ceroticAcid100g +
+                caprylicAcid100g +
+                lauricAcid100g +
+                myristicAcid100g +
+                palmiticAcid100g +
+                stearicAcid100g +
+                oleicAcid100g +
+                gondoicAcid100g +
+                nervonicAcid100g +
+                alphaLinolenicAcid100g +
+                arachidicAcid100g +
+                lauricAcid100g +
+                lignocericAcid100g +
+                dihomoGammaLinolenicAcid100g +
+                gammaLinolenicAcid100g +
+                arachidonicAcid100g +
+                eicosapentaenoicAcid100g +
+                docosahexaenoicAcid100g +
+                elaidicAcid100g +
+                transFat100g +
+                monounsaturatedFat100g +
+                polyunsaturatedFat100g +
+                unsaturatedFat100g +
+                saturatedFat100g +
+                omega3Fat100g +
+                omega6Fat100g +
+                omega9Fat100g;
     }
 
     @Override
@@ -196,9 +223,5 @@ public class Fats {
 
     public double getOmega9Fat100g() {
         return omega9Fat100g;
-    }
-
-    public double getFat100g() {
-        return fat100g;
     }
 }

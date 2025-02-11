@@ -17,11 +17,18 @@ public class NutritionProfile {
 
     Vitamins vitamins;
 
-    public double acidity100g;
-
+    // ==This fields may be optional==
     public double salt100g;
 
-    public double sugars100g;
+    public double sugars100g; // total
+
+    public double calories;
+
+    public double fat100g;
+
+    // ===================
+
+    public double acidity100g;
 
     public double behenicAcid100g;
 
@@ -73,14 +80,9 @@ public class NutritionProfile {
 
     public double waterHardness100g;
 
-    public double calories;        // optional
-
-    public double fat;             // (g) optional
-
     final int gramsSize = 100;
 
     final int milSize = 100;
-
 
     public NutritionProfile(
             BioactiveCompounds compounds,
@@ -94,6 +96,8 @@ public class NutritionProfile {
         this.minerals = minerals;
         this.proteins = proteins;
         this.vitamins = vitamins;
+
+        fat100g = fats.getTotalFat();
     }
 
     public NutritionProfile() {
@@ -137,7 +141,6 @@ public class NutritionProfile {
     public double getCocoa100g() {
         return cocoa100g;
     }
-
 
     public double getEnergyFromFat100g() {
         return energyFromFat100g;
@@ -228,8 +231,8 @@ public class NutritionProfile {
         return calories;
     }
 
-    public double getFat() {
-        return fat;
+    public double getFat100g() {
+        return fat100g;
     }
 
     public BioactiveCompounds getCompounds() {

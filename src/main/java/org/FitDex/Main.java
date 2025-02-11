@@ -5,6 +5,7 @@ import org.FitDex.Persistence.FoodDataAccess;
 import org.FitDex.WebAPI.Server;
 
 import java.sql.SQLException;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
@@ -31,14 +32,27 @@ public class Main {
         //App loop -- for testing
         boolean run = true;
 
+        Scanner scanner = new Scanner(System.in);
+
         while (run) {
 
-            run = false;
+            System.out.print("Search product: ");
+
+            String command = scanner.nextLine();
+
+            // The system should give suggestions and give a list of closest matchs.
+            Food food = dataSource.getProductByName(command);
+
+            if (food != null) food.analyseFat();
+
+            if (command == "quit") {
+                run = false;
+            }
         }
 
-        for (Food food : dataSource.getAllProducts()) {
-            FoodAnalyzer.analyseFat(food);
-        }
+//        for (Food food : dataSource.getAllProducts()) {
+//            food.analyseFat();
+//        }
 //            Food food = dataSource.getProductsById(111048403);
         Server server = new Server();
     }

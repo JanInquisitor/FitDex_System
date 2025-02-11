@@ -53,8 +53,6 @@ public class FoodDataAccess {
         }
     }
 
-    // This will get both ingredients and foods, I'll make a dinstinction in the database eventually or have it a single
-    // unit, or a field in the table that determines which is which
     public Food getProductsById(int id) throws SQLException {
         try (Connection connection = DriverManager.getConnection(this.connectionString);
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM products WHERE code = ?")) {
@@ -65,7 +63,15 @@ public class FoodDataAccess {
 
     public Food getProductByName(String name) throws SQLException {
         try (Connection connection = DriverManager.getConnection(this.connectionString);
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM products WHERE name = ?")) {
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM products WHERE product_name = ?")) {
+            statement.setString(1, name);
+            return extractHelper(statement);
+        }
+    }
+
+    public Food getProductByBrand(String name) throws SQLException {
+        try (Connection connection = DriverManager.getConnection(this.connectionString);
+             PreparedStatement statement = connection.prepareStatement("SELECT * FROM products WHERE brands = ?")) {
             statement.setString(1, name);
             return extractHelper(statement);
         }
@@ -79,7 +85,7 @@ public class FoodDataAccess {
         }
     }
 
-// I might make another class or method where I just toss the statement and unclog this class
+    // I might make another class or method where I just toss the statement and unclog this class
     @Nullable
     private Food extractHelper(PreparedStatement statement) throws SQLException {
         try (ResultSet resultSet = statement.executeQuery()) {
@@ -102,7 +108,12 @@ public class FoodDataAccess {
             double omega3FatsContent = resultSet.getDouble("omega-3-fat_100g");
             double omega6FatsContent = resultSet.getDouble("omega-6-fat_100g");
 
-            System.out.println(resultSet.getString("ingredients_text"));
+
+            String ingredientsString = resultSet.getString("ingredients_text");
+
+            System.out.println(productName);
+            System.out.println("Carbohydrate content: " + carbohydratesContent);
+            System.out.println("Ingredients: " +ingredientsString);
 //            System.out.println(resultSet.getString("ingredients_tags"));
 //            System.out.println(resultSet.getString("ingredients_analysis_tags"));
 
