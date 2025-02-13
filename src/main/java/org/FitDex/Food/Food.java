@@ -2,31 +2,36 @@ package org.FitDex.Food;
 
 
 import org.FitDex.Ingredient;
+import org.FitDex.LocationRules;
 import org.FitDex.Nutrients.Fats;
 import org.FitDex.Nutrients.NutritionProfile;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 // For now, to make the system simple. The distinct products based on locality will be distinguish primarily by the system
 // by their country flag/attribute. And because their location flag is diferent they'll have the different ingredients, components and nutritional values
 // that the system will warn them about
 
-// Maybe the Ingredients in the food class should be a Class or an array/list of class ingredients
 public class Food {
 
     private final String name;
 
-    ArrayList<Ingredient> ingredients;
-    // When it's time to create the NutritionalValues of the food/product use perhaps a constructor along with the builder
-    // mechanism I implemented.
+    private String ingredientsString;
 
-    String ingredientsString;
+    private String location = "USA";
+
+    private ArrayList<String> ingredients;// Later this list will hold ingredients
 
     private final NutritionProfile nutritionProfile;
+
 
     public Food(String name, NutritionProfile nutritionProfile) {
         this.name = name;
         this.nutritionProfile = nutritionProfile;
+        ingredients = new ArrayList<>();
+        ingredients.add("Brominated vegetable oil");
     }
 
     public void analyseFat() {
@@ -50,7 +55,18 @@ public class Food {
 
     }
 
-    public void analyse() {
+    public void analyse(LocationRules rules) {
+        if (!Objects.equals(rules.getLocation(), location)) {
+            return;
+        }
+
+        List<String> bannedIngredients = rules.getBannedIngredients();
+
+        for (String ingredient : ingredients) {
+            if (bannedIngredients.contains(ingredient)) {
+                System.out.println("Warning, this product (" + this.getName() + ")" + " contains " + ingredient +", a banned ingredient in " + this.location + ".");
+            }
+        }
 
     }
 

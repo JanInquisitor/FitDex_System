@@ -633,11 +633,6 @@ public class NutritionProfileBuilder implements Nutrition {
         return this;
     }
 
-    @Override
-    public Nutrition setFat(double fat) {
-        return this;
-    }
-
 
     @Override
     public NutritionProfile build() {

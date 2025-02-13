@@ -18,6 +18,7 @@ public class NutritionProfile {
     Vitamins vitamins;
 
     // ==This fields may be optional==
+
     public double salt100g;
 
     public double sugars100g; // total

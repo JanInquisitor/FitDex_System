@@ -5,28 +5,24 @@ import org.FitDex.Persistence.FoodDataAccess;
 import org.FitDex.WebAPI.Server;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws SQLException {
-        // Now the next step is, to work on the data layer without Hibernate with pure JDBC and SQL code.
-        // I'll start to pull food from the database with high concentrations of omega-6 and a warning system that will
-        // let users know the risks of this food.
-        // Also have different versions of this food in different countries, I guess I'll have to make my own database
-        // entries to work and test my functionalities.. I could've done that from the beginning now that I think about it.
+        // Also have different versions of this food in different countries; I guess I'll have to make my own database.
 
-
-        // A class that analyzes the nutritional facts and ingredients of the product/food
-        // A class that is a warning and maybe another one that makes warning.
-
-        // Right now the structure is messy, but right now I'm just working on functionality, when I finish prototyping
-        // the main functionalities then I'll refactor the code, I'm thinking of making the Food/Product object smaller using composition.
+        // So for the comparison,
+        // the app will receive the location and search all the rules and laws and food restrictions
+        // of that locality
+        // and then look for the product desired in the same locality
+        // and compare it to the food information retrieved by the system.
 
         // What about a graph map for ingredients? That sounds like a good idea. But for ingredients and not nutrients.
         // Using an adjacency list for nutrients can be a bad idea seeing the number of meals and ingredients there is.
 
-        // Important thought: Right the app shouldn't really have this many.
-        // Think about chaches, how can I cache for most searched items, etc.
+
         FoodDataAccess dataSource = new FoodDataAccess();
 
         //App loop -- for testing
@@ -36,24 +32,33 @@ public class Main {
 
         while (run) {
 
+            LocationRules rules = new LocationRules("USA");
+
             System.out.print("Search product: ");
 
             String command = scanner.nextLine();
 
-            // The system should give suggestions and give a list of closest matchs.
-            Food food = dataSource.getProductByName(command);
+            Food food = dataSource.getProductSingleByName(command);
 
-            if (food != null) food.analyseFat();
+//            List<Food> foodList = dataSource.getProductsByName(command);
 
-            if (command == "quit") {
+            if (food != null) food.analyse(rules);
+
+//            if (!foodList.isEmpty()) {
+//                for (Food f : foodList) {
+//                    System.out.println(f.getName());
+//                }
+//            }
+
+            if (Objects.equals(command, "quit")) {
                 run = false;
             }
         }
 
-//        for (Food food : dataSource.getAllProducts()) {
-//            food.analyseFat();
-//        }
-//            Food food = dataSource.getProductsById(111048403);
+        for (Food food : dataSource.getAllProducts()) {
+            System.out.println(food.getName());
+        }
+
         Server server = new Server();
     }
 }
