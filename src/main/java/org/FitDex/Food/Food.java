@@ -1,10 +1,9 @@
 package org.FitDex.Food;
 
 
-import org.FitDex.Ingredient;
 import org.FitDex.LocationRules;
-import org.FitDex.Nutrients.Fats;
 import org.FitDex.Nutrients.NutritionProfile;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,11 +17,10 @@ public class Food {
 
     private final String name;
 
-    private String ingredientsString;
 
     private String location = "USA";
 
-    private ArrayList<String> ingredients;// Later this list will hold ingredients
+    private List<String> ingredients;// Later this list will hold ingredients
 
     private final NutritionProfile nutritionProfile;
 
@@ -32,6 +30,19 @@ public class Food {
         this.nutritionProfile = nutritionProfile;
         ingredients = new ArrayList<>();
         ingredients.add("Brominated vegetable oil");
+    }
+
+    public Food(String name, String location, NutritionProfile nutritionProfile) {
+        this.name = name;
+        this.nutritionProfile = nutritionProfile;
+        this.location = location;
+    }
+
+    public Food(String name, String location, List<String> ingredients, NutritionProfile nutritionProfile) {
+        this.name = name;
+        this.nutritionProfile = nutritionProfile;
+        this.location = location;
+        this.ingredients = ingredients;
     }
 
     public void analyseFat() {
@@ -64,7 +75,7 @@ public class Food {
 
         for (String ingredient : ingredients) {
             if (bannedIngredients.contains(ingredient)) {
-                System.out.println("Warning, this product (" + this.getName() + ")" + " contains " + ingredient +", a banned ingredient in " + this.location + ".");
+                System.out.println("Warning, this product (" + this.getName() + ")" + " contains " + ingredient + ", a banned ingredient in " + this.location + ".");
             }
         }
 
@@ -78,5 +89,8 @@ public class Food {
         return nutritionProfile.getFat100g();
     }
 
-
+    public List<String> getIngredients() {
+        if (ingredients != null) return ingredients;
+        return new ArrayList<>();
+    }
 }

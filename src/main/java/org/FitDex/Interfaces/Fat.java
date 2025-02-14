@@ -66,7 +66,6 @@ public interface Fat {
 
     Nutrition setLinoleicAcid100g(double linoleicAcid100g);
 
-
     Nutrition setOmega3Fat100g(double omega3Fat100g);
 
     Nutrition setOmega6Fat100g(double omega6Fat100g);

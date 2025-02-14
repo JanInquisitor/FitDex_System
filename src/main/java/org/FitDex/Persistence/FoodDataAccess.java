@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 // This class is used for testing purposses
@@ -44,6 +45,7 @@ public class FoodDataAccess {
         }
     }
 
+    // This one will rarely be used tbh.
     public Food getProductSingleByName(String name) throws SQLException {
         try (Connection connection = DriverManager.getConnection(this.connectionString);
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM products WHERE product_name = ?")) {
@@ -99,12 +101,10 @@ public class FoodDataAccess {
         double omega6FatsContent = resultSet.getDouble("omega-6-fat_100g");
 
         String ingredientsString = resultSet.getString("ingredients_text");
+        String countriesString = resultSet.getString("countries");
 
 //        System.out.println(productName);
 //        System.out.println("Carbohydrate content: " + carbohydratesContent);
-        System.out.println("Ingredients: " + ingredientsString);
-//            System.out.println(resultSet.getString("ingredients_tags"));
-//            System.out.println(resultSet.getString("ingredients_analysis_tags"));
 
         // Handle null values safely
         if (resultSet.wasNull()) {
@@ -130,7 +130,12 @@ public class FoodDataAccess {
                 .setOmega6Fat100g(omega6FatsContent)
                 .setSaturatedfat100g(saturatedFatContent).build();
 
-        return new Food(productName, nutritionProfile);
+        ArrayList<String> ingredients = null;
+        if (ingredientsString != null) {
+            String[] ingredientsArr = ingredientsString.split(",");
+            ingredients = new ArrayList<>(Arrays.asList(ingredientsArr));
+        }
+        return new Food(productName, countriesString, ingredients, nutritionProfile);
     }
 
     @Nullable

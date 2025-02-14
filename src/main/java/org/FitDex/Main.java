@@ -22,6 +22,13 @@ public class Main {
         // What about a graph map for ingredients? That sounds like a good idea. But for ingredients and not nutrients.
         // Using an adjacency list for nutrients can be a bad idea seeing the number of meals and ingredients there is.
 
+        // Really, I think the app is more about data retrieval than manipulation (For now at least).
+
+        // 1. I need to process the ingredient Strings and 'countries' strings (gotta also formalize the data in my own tables)
+        // 2. Then I got to do the same for countries, and come up with a way of having different versions of the same
+        //    product with their differences on their correspondant location.
+        // 3. Make the analysis and retrieval of the banned ingredients and health warning.
+
 
         FoodDataAccess dataSource = new FoodDataAccess();
 
@@ -38,17 +45,19 @@ public class Main {
 
             String command = scanner.nextLine();
 
-            Food food = dataSource.getProductSingleByName(command);
+//            Food food = dataSource.getProductSingleByName(command);
 
-//            List<Food> foodList = dataSource.getProductsByName(command);
+            List<Food> foodList = dataSource.getProductsByName(command);
 
-            if (food != null) food.analyse(rules);
+//            if (food != null) food.analyse(rules);
 
-//            if (!foodList.isEmpty()) {
-//                for (Food f : foodList) {
-//                    System.out.println(f.getName());
-//                }
-//            }
+//            List<Food> foodList = dataSource.getAllProducts();
+
+            if (!foodList.isEmpty()) {
+                for (Food f : foodList) {
+                    if (!f.getIngredients().isEmpty()) System.out.println(f.getIngredients());
+                }
+            }
 
             if (Objects.equals(command, "quit")) {
                 run = false;
@@ -62,3 +71,4 @@ public class Main {
         Server server = new Server();
     }
 }
+
